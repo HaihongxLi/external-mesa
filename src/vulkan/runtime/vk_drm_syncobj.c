@@ -53,15 +53,16 @@ vk_drm_syncobj_init(struct vk_device *device,
       flags |= DRM_SYNCOBJ_CREATE_SIGNALED;
 
    assert(device->drm_fd >= 0);
-   int err = drmSyncobjCreate(device->drm_fd, flags, &sobj->syncobj);
+   // int err = drmSyncobjCreate(device->drm_fd, flags, &sobj->syncobj);
+   int err = 0;
    if (err < 0) {
       return vk_errorf(device, VK_ERROR_OUT_OF_HOST_MEMORY,
                        "DRM_IOCTL_SYNCOBJ_CREATE failed: %m");
    }
 
    if ((sync->flags & VK_SYNC_IS_TIMELINE) && initial_value) {
-      err = drmSyncobjTimelineSignal(device->drm_fd, &sobj->syncobj,
-                                     &initial_value, 1);
+      // err = drmSyncobjTimelineSignal(device->drm_fd, &sobj->syncobj,
+      //                                &initial_value, 1);
       if (err < 0) {
          vk_drm_syncobj_finish(device, sync);
          return vk_errorf(device, VK_ERROR_OUT_OF_HOST_MEMORY,
@@ -79,7 +80,8 @@ vk_drm_syncobj_finish(struct vk_device *device,
    struct vk_drm_syncobj *sobj = to_drm_syncobj(sync);
 
    assert(device->drm_fd >= 0);
-   ASSERTED int err = drmSyncobjDestroy(device->drm_fd, sobj->syncobj);
+   // ASSERTED int err = drmSyncobjDestroy(device->drm_fd, sobj->syncobj);
+   int err = 0;
    assert(err == 0);
 }
 
@@ -92,10 +94,10 @@ vk_drm_syncobj_signal(struct vk_device *device,
 
    assert(device->drm_fd >= 0);
    int err;
-   if (sync->flags & VK_SYNC_IS_TIMELINE)
-      err = drmSyncobjTimelineSignal(device->drm_fd, &sobj->syncobj, &value, 1);
-   else
-      err = drmSyncobjSignal(device->drm_fd, &sobj->syncobj, 1);
+   // if (sync->flags & VK_SYNC_IS_TIMELINE)
+   //    err = drmSyncobjTimelineSignal(device->drm_fd, &sobj->syncobj, &value, 1);
+   // else
+   //    err = drmSyncobjSignal(device->drm_fd, &sobj->syncobj, 1);
    if (err) {
       return vk_errorf(device, VK_ERROR_UNKNOWN,
                        "DRM_IOCTL_SYNCOBJ_SIGNAL failed: %m");
@@ -112,7 +114,8 @@ vk_drm_syncobj_get_value(struct vk_device *device,
    struct vk_drm_syncobj *sobj = to_drm_syncobj(sync);
 
    assert(device->drm_fd >= 0);
-   int err = drmSyncobjQuery(device->drm_fd, &sobj->syncobj, value, 1);
+   // int err = drmSyncobjQuery(device->drm_fd, &sobj->syncobj, value, 1);
+   int err = 0;
    if (err) {
       return vk_errorf(device, VK_ERROR_UNKNOWN,
                        "DRM_IOCTL_SYNCOBJ_QUERY failed: %m");
@@ -128,7 +131,8 @@ vk_drm_syncobj_reset(struct vk_device *device,
    struct vk_drm_syncobj *sobj = to_drm_syncobj(sync);
 
    assert(device->drm_fd >= 0);
-   int err = drmSyncobjReset(device->drm_fd, &sobj->syncobj, 1);
+   // int err = drmSyncobjReset(device->drm_fd, &sobj->syncobj, 1);
+   int err = 0;
    if (err) {
       return vk_errorf(device, VK_ERROR_UNKNOWN,
                        "DRM_IOCTL_SYNCOBJ_RESET failed: %m");
@@ -143,7 +147,8 @@ sync_has_sync_file(struct vk_device *device, struct vk_sync *sync)
    uint32_t handle = to_drm_syncobj(sync)->syncobj;
 
    int fd = -1;
-   int err = drmSyncobjExportSyncFile(device->drm_fd, handle, &fd);
+   // int err = drmSyncobjExportSyncFile(device->drm_fd, handle, &fd);
+   int err = 0;
    if (!err) {
       close(fd);
       return VK_SUCCESS;
@@ -153,9 +158,9 @@ sync_has_sync_file(struct vk_device *device, struct vk_sync *sync)
     * unexpected reason, we want to ensure this function will return success
     * eventually.  Do a zero-time syncobj wait if the export failed.
     */
-   err = drmSyncobjWait(device->drm_fd, &handle, 1, 0 /* timeout */,
-                        DRM_SYNCOBJ_WAIT_FLAGS_WAIT_FOR_SUBMIT,
-                        NULL /* first_signaled */);
+   // err = drmSyncobjWait(device->drm_fd, &handle, 1, 0 /* timeout */,
+   //                      DRM_SYNCOBJ_WAIT_FLAGS_WAIT_FOR_SUBMIT,
+   //                      NULL /* first_signaled */);
    if (!err) {
       return VK_SUCCESS;
    } else if (errno == ETIME) {
@@ -260,21 +265,21 @@ vk_drm_syncobj_wait_many(struct vk_device *device,
        * syncobjs because the non-timeline wait doesn't support
        * DRM_SYNCOBJ_WAIT_FLAGS_WAIT_AVAILABLE.
        */
-      err = drmSyncobjTimelineWait(device->drm_fd, handles, wait_values,
-                                   wait_count, abs_timeout_ns,
-                                   syncobj_wait_flags |
-                                   DRM_SYNCOBJ_WAIT_FLAGS_WAIT_AVAILABLE,
-                                   NULL /* first_signaled */);
+      // err = drmSyncobjTimelineWait(device->drm_fd, handles, wait_values,
+      //                              wait_count, abs_timeout_ns,
+      //                              syncobj_wait_flags |
+      //                              DRM_SYNCOBJ_WAIT_FLAGS_WAIT_AVAILABLE,
+      //                              NULL /* first_signaled */);
    } else if (has_timeline) {
-      err = drmSyncobjTimelineWait(device->drm_fd, handles, wait_values,
-                                   wait_count, abs_timeout_ns,
-                                   syncobj_wait_flags,
-                                   NULL /* first_signaled */);
+      // err = drmSyncobjTimelineWait(device->drm_fd, handles, wait_values,
+      //                              wait_count, abs_timeout_ns,
+      //                              syncobj_wait_flags,
+      //                              NULL /* first_signaled */);
    } else {
-      err = drmSyncobjWait(device->drm_fd, handles,
-                           wait_count, abs_timeout_ns,
-                           syncobj_wait_flags,
-                           NULL /* first_signaled */);
+      // err = drmSyncobjWait(device->drm_fd, handles,
+      //                      wait_count, abs_timeout_ns,
+      //                      syncobj_wait_flags,
+      //                      NULL /* first_signaled */);
    }
 
    STACK_ARRAY_FINISH(handles);
@@ -299,13 +304,14 @@ vk_drm_syncobj_import_opaque_fd(struct vk_device *device,
 
    assert(device->drm_fd >= 0);
    uint32_t new_handle;
-   int err = drmSyncobjFDToHandle(device->drm_fd, fd, &new_handle);
+   // int err = drmSyncobjFDToHandle(device->drm_fd, fd, &new_handle);
+   int err = 0;
    if (err) {
       return vk_errorf(device, VK_ERROR_UNKNOWN,
                        "DRM_IOCTL_SYNCOBJ_FD_TO_HANDLE failed: %m");
    }
 
-   err = drmSyncobjDestroy(device->drm_fd, sobj->syncobj);
+   // err = drmSyncobjDestroy(device->drm_fd, sobj->syncobj);
    assert(!err);
 
    sobj->syncobj = new_handle;
@@ -321,7 +327,8 @@ vk_drm_syncobj_export_opaque_fd(struct vk_device *device,
    struct vk_drm_syncobj *sobj = to_drm_syncobj(sync);
 
    assert(device->drm_fd >= 0);
-   int err = drmSyncobjHandleToFD(device->drm_fd, sobj->syncobj, fd);
+   // int err = drmSyncobjHandleToFD(device->drm_fd, sobj->syncobj, fd);
+   int err = 0;
    if (err) {
       return vk_errorf(device, VK_ERROR_UNKNOWN,
                        "DRM_IOCTL_SYNCOBJ_HANDLE_TO_FD failed: %m");
@@ -338,7 +345,8 @@ vk_drm_syncobj_import_sync_file(struct vk_device *device,
    struct vk_drm_syncobj *sobj = to_drm_syncobj(sync);
 
    assert(device->drm_fd >= 0);
-   int err = drmSyncobjImportSyncFile(device->drm_fd, sobj->syncobj, sync_file);
+   // int err = drmSyncobjImportSyncFile(device->drm_fd, sobj->syncobj, sync_file);
+   int err = 0;
    if (err) {
       return vk_errorf(device, VK_ERROR_UNKNOWN,
                        "DRM_IOCTL_SYNCOBJ_FD_TO_HANDLE failed: %m");
@@ -355,7 +363,8 @@ vk_drm_syncobj_export_sync_file(struct vk_device *device,
    struct vk_drm_syncobj *sobj = to_drm_syncobj(sync);
 
    assert(device->drm_fd >= 0);
-   int err = drmSyncobjExportSyncFile(device->drm_fd, sobj->syncobj, sync_file);
+   // int err = drmSyncobjExportSyncFile(device->drm_fd, sobj->syncobj, sync_file);
+   int err = 0;
    if (err) {
       return vk_errorf(device, VK_ERROR_UNKNOWN,
                        "DRM_IOCTL_SYNCOBJ_HANDLE_TO_FD failed: %m");
@@ -404,7 +413,8 @@ struct vk_sync_type
 vk_drm_syncobj_get_type(int drm_fd)
 {
    uint32_t syncobj = 0;
-   int err = drmSyncobjCreate(drm_fd, DRM_SYNCOBJ_CREATE_SIGNALED, &syncobj);
+   // int err = drmSyncobjCreate(drm_fd, DRM_SYNCOBJ_CREATE_SIGNALED, &syncobj);
+   int err = 0;
    if (err < 0)
       return (struct vk_sync_type) { .features = 0 };
 
@@ -426,9 +436,9 @@ vk_drm_syncobj_get_type(int drm_fd)
       .export_sync_file = vk_drm_syncobj_export_sync_file,
    };
 
-   err = drmSyncobjWait(drm_fd, &syncobj, 1, 0,
-                        DRM_SYNCOBJ_WAIT_FLAGS_WAIT_ALL,
-                        NULL /* first_signaled */);
+   // err = drmSyncobjWait(drm_fd, &syncobj, 1, 0,
+   //                      DRM_SYNCOBJ_WAIT_FLAGS_WAIT_ALL,
+   //                      NULL /* first_signaled */);
    if (err == 0) {
       type.wait_many = vk_drm_syncobj_wait_many;
       type.features |= VK_SYNC_FEATURE_CPU_WAIT |
@@ -436,13 +446,13 @@ vk_drm_syncobj_get_type(int drm_fd)
    }
 
    uint64_t cap;
-   err = drmGetCap(drm_fd, DRM_CAP_SYNCOBJ_TIMELINE, &cap);
+   // err = drmGetCap(drm_fd, DRM_CAP_SYNCOBJ_TIMELINE, &cap);
    if (err == 0 && cap != 0) {
       type.get_value = vk_drm_syncobj_get_value;
       type.features |= VK_SYNC_FEATURE_TIMELINE;
    }
 
-   err = drmSyncobjDestroy(drm_fd, syncobj);
+   // err = drmSyncobjDestroy(drm_fd, syncobj);
    assert(err == 0);
 
    return type;

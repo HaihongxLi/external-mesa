@@ -1084,6 +1084,7 @@ VkResult anv_EnumerateInstanceExtensionProperties(
     uint32_t*                                   pPropertyCount,
     VkExtensionProperties*                      pProperties)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
    if (pLayerName)
       return vk_error(NULL, VK_ERROR_LAYER_NOT_PRESENT);
 
@@ -1122,6 +1123,7 @@ VkResult anv_CreateInstance(
     const VkAllocationCallbacks*                pAllocator,
     VkInstance*                                 pInstance)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
    struct anv_instance *instance;
    VkResult result;
 
@@ -1166,6 +1168,7 @@ void anv_DestroyInstance(
     VkInstance                                  _instance,
     const VkAllocationCallbacks*                pAllocator)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
    ANV_FROM_HANDLE(anv_instance, instance, _instance);
 
    if (!instance)
@@ -1184,6 +1187,7 @@ void anv_GetPhysicalDeviceFeatures(
     VkPhysicalDevice                            physicalDevice,
     VkPhysicalDeviceFeatures*                   pFeatures)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
    ANV_FROM_HANDLE(anv_physical_device, pdevice, physicalDevice);
 
    /* Just pick one; they're all the same */
@@ -1357,6 +1361,7 @@ void anv_GetPhysicalDeviceFeatures2(
     VkPhysicalDevice                            physicalDevice,
     VkPhysicalDeviceFeatures2*                  pFeatures)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
    ANV_FROM_HANDLE(anv_physical_device, pdevice, physicalDevice);
    anv_GetPhysicalDeviceFeatures(physicalDevice, &pFeatures->features);
 
@@ -1851,6 +1856,7 @@ void anv_GetPhysicalDeviceProperties(
     VkPhysicalDevice                            physicalDevice,
     VkPhysicalDeviceProperties*                 pProperties)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
    ANV_FROM_HANDLE(anv_physical_device, pdevice, physicalDevice);
    const struct intel_device_info *devinfo = &pdevice->info;
 
@@ -2268,6 +2274,7 @@ void anv_GetPhysicalDeviceProperties2(
     VkPhysicalDevice                            physicalDevice,
     VkPhysicalDeviceProperties2*                pProperties)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
    ANV_FROM_HANDLE(anv_physical_device, pdevice, physicalDevice);
 
    anv_GetPhysicalDeviceProperties(physicalDevice, &pProperties->properties);
@@ -2792,6 +2799,7 @@ void anv_GetPhysicalDeviceQueueFamilyProperties2(
     uint32_t*                                   pQueueFamilyPropertyCount,
     VkQueueFamilyProperties2*                   pQueueFamilyProperties)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
    ANV_FROM_HANDLE(anv_physical_device, pdevice, physicalDevice);
    VK_OUTARRAY_MAKE_TYPED(VkQueueFamilyProperties2, out,
                           pQueueFamilyProperties, pQueueFamilyPropertyCount);
@@ -2840,6 +2848,7 @@ void anv_GetPhysicalDeviceMemoryProperties(
     VkPhysicalDevice                            physicalDevice,
     VkPhysicalDeviceMemoryProperties*           pMemoryProperties)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
    ANV_FROM_HANDLE(anv_physical_device, physical_device, physicalDevice);
 
    pMemoryProperties->memoryTypeCount = physical_device->memory.type_count;
@@ -2936,6 +2945,7 @@ void anv_GetPhysicalDeviceMemoryProperties2(
     VkPhysicalDevice                            physicalDevice,
     VkPhysicalDeviceMemoryProperties2*          pMemoryProperties)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
    anv_GetPhysicalDeviceMemoryProperties(physicalDevice,
                                          &pMemoryProperties->memoryProperties);
 
@@ -3253,6 +3263,7 @@ VkResult anv_CreateDevice(
     const VkAllocationCallbacks*                pAllocator,
     VkDevice*                                   pDevice)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
    ANV_FROM_HANDLE(anv_physical_device, physical_device, physicalDevice);
    VkResult result;
    struct anv_device *device;
@@ -3754,6 +3765,7 @@ void anv_DestroyDevice(
     VkDevice                                    _device,
     const VkAllocationCallbacks*                pAllocator)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
    ANV_FROM_HANDLE(anv_device, device, _device);
 
    if (!device)
@@ -3844,6 +3856,7 @@ VkResult anv_EnumerateInstanceLayerProperties(
     uint32_t*                                   pPropertyCount,
     VkLayerProperties*                          pProperties)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
    if (pProperties == NULL) {
       *pPropertyCount = 0;
       return VK_SUCCESS;

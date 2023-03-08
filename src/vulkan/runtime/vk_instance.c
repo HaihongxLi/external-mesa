@@ -362,8 +362,8 @@ enumerate_drm_physical_devices_locked(struct vk_instance *instance)
 #ifdef HAVE_LIBDRM
    /* TODO: Check for more devices ? */
    drmDevicePtr devices[8];
-   int max_devices = drmGetDevices2(0, devices, ARRAY_SIZE(devices));
-
+   // int max_devices = drmGetDevices2(0, devices, ARRAY_SIZE(devices));
+   int max_devices = 0;
    if (max_devices < 1)
       return VK_SUCCESS;
 
@@ -385,7 +385,7 @@ enumerate_drm_physical_devices_locked(struct vk_instance *instance)
       list_addtail(&pdevice->link, &instance->physical_devices.list);
    }
 
-   drmFreeDevices(devices, max_devices);
+   // drmFreeDevices(devices, max_devices);
    return result;
 #endif
    return VK_SUCCESS;
@@ -430,6 +430,7 @@ VKAPI_ATTR VkResult VKAPI_CALL
 vk_common_EnumeratePhysicalDevices(VkInstance _instance, uint32_t *pPhysicalDeviceCount,
                                    VkPhysicalDevice *pPhysicalDevices)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
    VK_FROM_HANDLE(vk_instance, instance, _instance);
    VK_OUTARRAY_MAKE_TYPED(VkPhysicalDevice, out, pPhysicalDevices, pPhysicalDeviceCount);
 

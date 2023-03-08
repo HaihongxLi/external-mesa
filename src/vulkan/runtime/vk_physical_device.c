@@ -62,6 +62,7 @@ vk_common_EnumerateDeviceLayerProperties(VkPhysicalDevice physicalDevice,
                                          uint32_t *pPropertyCount,
                                          VkLayerProperties *pProperties)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
    if (pProperties == NULL) {
       *pPropertyCount = 0;
       return VK_SUCCESS;
@@ -77,6 +78,7 @@ vk_common_EnumerateDeviceExtensionProperties(VkPhysicalDevice physicalDevice,
                                              uint32_t *pPropertyCount,
                                              VkExtensionProperties *pProperties)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
    VK_FROM_HANDLE(vk_physical_device, pdevice, physicalDevice);
    VK_OUTARRAY_MAKE_TYPED(VkExtensionProperties, out, pProperties, pPropertyCount);
 

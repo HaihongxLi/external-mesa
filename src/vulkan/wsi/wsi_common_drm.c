@@ -51,7 +51,8 @@ wsi_dma_buf_export_sync_file(int dma_buf_fd, int *sync_file_fd)
       .flags = DMA_BUF_SYNC_RW,
       .fd = -1,
    };
-   int ret = drmIoctl(dma_buf_fd, DMA_BUF_IOCTL_EXPORT_SYNC_FILE, &export);
+   // int ret = drmIoctl(dma_buf_fd, DMA_BUF_IOCTL_EXPORT_SYNC_FILE, &export);
+   int ret = 0;
    if (ret) {
       if (errno == ENOTTY || errno == EBADF || errno == ENOSYS) {
          no_dma_buf_sync_file = true;
@@ -78,7 +79,8 @@ wsi_dma_buf_import_sync_file(int dma_buf_fd, int sync_file_fd)
       .flags = DMA_BUF_SYNC_RW,
       .fd = sync_file_fd,
    };
-   int ret = drmIoctl(dma_buf_fd, DMA_BUF_IOCTL_IMPORT_SYNC_FILE, &import);
+   // int ret = drmIoctl(dma_buf_fd, DMA_BUF_IOCTL_IMPORT_SYNC_FILE, &import);
+   int ret = 0;
    if (ret) {
       if (errno == ENOTTY || errno == EBADF || errno == ENOSYS) {
          no_dma_buf_sync_file = true;
@@ -230,23 +232,23 @@ bool
 wsi_common_drm_devices_equal(int fd_a, int fd_b)
 {
    drmDevicePtr device_a, device_b;
-   int ret;
+   // int ret;
 
-   ret = drmGetDevice2(fd_a, 0, &device_a);
-   if (ret)
-      return false;
+   // ret = drmGetDevice2(fd_a, 0, &device_a);
+   // if (ret)
+   //    return false;
 
-   ret = drmGetDevice2(fd_b, 0, &device_b);
-   if (ret) {
-      drmFreeDevice(&device_a);
-      return false;
-   }
+   // ret = drmGetDevice2(fd_b, 0, &device_b);
+   // if (ret) {
+   //    drmFreeDevice(&device_a);
+   //    return false;
+   // }
 
-   bool result = drmDevicesEqual(device_a, device_b);
+   // bool result = drmDevicesEqual(device_a, device_b);
 
-   drmFreeDevice(&device_a);
-   drmFreeDevice(&device_b);
-
+   // drmFreeDevice(&device_a);
+   // drmFreeDevice(&device_b);
+   bool result = true;
    return result;
 }
 
@@ -257,7 +259,8 @@ wsi_device_matches_drm_fd(const struct wsi_device *wsi, int drm_fd)
       return wsi->can_present_on_device(wsi->pdevice, drm_fd);
 
    drmDevicePtr fd_device;
-   int ret = drmGetDevice2(drm_fd, 0, &fd_device);
+   // int ret = drmGetDevice2(drm_fd, 0, &fd_device);
+   int ret = 0;
    if (ret)
       return false;
 
@@ -274,7 +277,7 @@ wsi_device_matches_drm_fd(const struct wsi_device *wsi, int drm_fd)
       break;
    }
 
-   drmFreeDevice(&fd_device);
+   // drmFreeDevice(&fd_device);
 
    return match;
 }

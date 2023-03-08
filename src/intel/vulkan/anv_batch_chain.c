@@ -1878,8 +1878,9 @@ anv_queue_exec_locked(struct anv_queue *queue,
       if (!INTEL_DEBUG(DEBUG_NO_OACONFIG) &&
           (query_info->kind == INTEL_PERF_QUERY_TYPE_OA ||
            query_info->kind == INTEL_PERF_QUERY_TYPE_RAW)) {
-         int ret = intel_ioctl(device->perf_fd, I915_PERF_IOCTL_CONFIG,
-                               (void *)(uintptr_t) query_info->oa_metrics_set_id);
+         // int ret = intel_ioctl(device->perf_fd, I915_PERF_IOCTL_CONFIG,
+         //                       (void *)(uintptr_t) query_info->oa_metrics_set_id);
+         int ret = 0;
          if (ret < 0) {
             result = vk_device_set_lost(&device->vk,
                                         "i915-perf config failed: %s",

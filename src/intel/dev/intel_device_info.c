@@ -2078,13 +2078,14 @@ intel_get_device_info_from_fd(int fd, struct intel_device_info *devinfo)
     * this drm query.
     */
    drmDevicePtr drmdev = NULL;
-   if (drmGetDevice2(fd, DRM_DEVICE_GET_PCI_REVISION, &drmdev)) {
-      mesa_loge("Failed to query drm device.");
-      return false;
-   }
+   return false;
+   // if (drmGetDevice2(fd, DRM_DEVICE_GET_PCI_REVISION, &drmdev)) {
+   //    mesa_loge("Failed to query drm device.");
+   //    return false;
+   // }
    if (!intel_get_device_info_from_pci_id
        (drmdev->deviceinfo.pci->device_id, devinfo)) {
-      drmFreeDevice(&drmdev);
+      // drmFreeDevice(&drmdev);
       return false;
    }
    devinfo->pci_domain = drmdev->businfo.pci->domain;
@@ -2093,7 +2094,7 @@ intel_get_device_info_from_fd(int fd, struct intel_device_info *devinfo)
    devinfo->pci_func = drmdev->businfo.pci->func;
    devinfo->pci_device_id = drmdev->deviceinfo.pci->device_id;
    devinfo->pci_revision_id = drmdev->deviceinfo.pci->revision_id;
-   drmFreeDevice(&drmdev);
+   // drmFreeDevice(&drmdev);
    devinfo->no_hw = debug_get_bool_option("INTEL_NO_HW", false);
 
    if (devinfo->ver == 10) {

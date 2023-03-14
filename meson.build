@@ -30,7 +30,10 @@ project(
   meson_version : '>= 0.54',
   default_options : ['buildtype=debugoptimized', 'b_ndebug=if-release', 'c_std=c11', 'cpp_std=c++17', 'rust_std=2021']
 )
-
+inc_libdxg = include_directories(
+    '/home/lhh/dev2Tdisk/code/celadon_s/hardware/intel/external/libdxg/include',
+    '/home/lhh/dev2Tdisk/code/celadon_s/hardware/intel/external/DirectX-Headers/include',
+    '/home/lhh/dev2Tdisk/code/celadon_s/hardware/intel/external/DirectX-Headers/include/wsl/stubs')
 # In recent versions, meson can inject some extra arguments to get richer
 # results from gtest based tests.  Feature was added in 0.55, but requiring
 # 0.59.2 to include an important fix.  See https://github.com/mesonbuild/meson/pull/9283.

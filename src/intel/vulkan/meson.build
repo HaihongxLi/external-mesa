@@ -118,7 +118,7 @@ foreach g : [['90', ['gfx8_cmd_buffer.c']],
     [anv_per_hw_ver_files, g[1], anv_entrypoints[0],
      generated_draws_spv_h, generated_draws_count_spv_h],
     include_directories : [
-      inc_include, inc_src, inc_mapi, inc_mesa, inc_gallium, inc_compiler, inc_intel,
+      inc_include, inc_src, inc_mapi, inc_mesa, inc_gallium, inc_compiler, inc_intel, inc_libdxg
     ],
     c_args : anv_flags + ['-DGFX_VERx10=@0@'.format(_gfx_ver)],
     gnu_symbol_visibility : 'hidden',
@@ -203,7 +203,7 @@ libanv_common = static_library(
   ],
   include_directories : [
     inc_include, inc_src, inc_mapi, inc_mesa, inc_gallium, inc_intel, inc_compiler,
-    inc_util,
+    inc_util, inc_libdxg,
   ],
   c_args : anv_flags,
   cpp_args : anv_cpp_flags,
@@ -215,7 +215,7 @@ libvulkan_intel = shared_library(
   'vulkan_intel',
   [files('anv_gem.c'), anv_entrypoints[0]],
   include_directories : [
-    inc_include, inc_src, inc_mapi, inc_mesa, inc_gallium, inc_intel, inc_compiler,
+    inc_include, inc_src, inc_mapi, inc_mesa, inc_gallium, inc_intel, inc_compiler, inc_libdxg
   ],
   link_whole : [libanv_common, libanv_per_hw_ver_libs] + optional_libgrl,
   link_with : [
@@ -251,7 +251,7 @@ if with_tests
     'vulkan_intel_test',
     [files('anv_gem_stubs.c'), anv_entrypoints[0]],
     include_directories : [
-      inc_include, inc_src, inc_mapi, inc_mesa, inc_gallium, inc_intel, inc_compiler,
+      inc_include, inc_src, inc_mapi, inc_mesa, inc_gallium, inc_intel, inc_compiler, inc_libdxg
     ],
     link_whole : libanv_common,
     link_with : [
@@ -283,7 +283,7 @@ if with_tests
           idep_vulkan_runtime, idep_intel_driver_ds,
         ],
         include_directories : [
-          inc_include, inc_src, inc_mapi, inc_mesa, inc_gallium, inc_intel, inc_compiler,
+          inc_include, inc_src, inc_mapi, inc_mesa, inc_gallium, inc_intel, inc_compiler, inc_libdxg
         ],
       ),
       suite : ['intel'],

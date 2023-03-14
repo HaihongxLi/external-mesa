@@ -61,7 +61,8 @@
 
 #include "genxml/gen7_pack.h"
 #include "genxml/genX_bits.h"
-
+#include <wsl/winadapter.h>
+#include <d3dkmthk.h>
 static const driOptionDescription anv_dri_options[] = {
    DRI_CONF_SECTION_PERFORMANCE
       DRI_CONF_ADAPTIVE_SYNC(true)
@@ -139,6 +140,7 @@ compiler_perf_log(UNUSED void *data, UNUSED unsigned *id, const char *fmt, ...)
 VkResult anv_EnumerateInstanceVersion(
     uint32_t*                                   pApiVersion)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
     *pApiVersion = ANV_API_VERSION;
     return VK_SUCCESS;
 }
@@ -824,6 +826,14 @@ anv_physical_device_get_parameters(struct anv_physical_device *device)
 }
 
 static VkResult
+anv_physical_device_try_create_dxg(struct vk_instance *vk_instance,
+                               D3DKMT_ADAPTERINFO *drm_device,
+                               struct vk_physical_device **out)
+{
+   return 0;
+}
+
+static VkResult
 anv_physical_device_try_create(struct vk_instance *vk_instance,
                                struct _drmDevice *drm_device,
                                struct vk_physical_device **out)
@@ -1040,7 +1050,7 @@ anv_physical_device_try_create(struct vk_instance *vk_instance,
    anv_genX(&device->info, init_physical_device_state)(device);
 
    *out = &device->vk;
-
+   printf("LHH, %s:%s:%d, result %d\n",__FILE__, __FUNCTION__, __LINE__, VK_SUCCESS);
    return VK_SUCCESS;
 
 fail_perf:
@@ -1057,6 +1067,7 @@ fail_fd:
    close(fd);
    if (master_fd != -1)
       close(master_fd);
+   printf("LHH, %s:%s:%d, result %d\n",__FILE__, __FUNCTION__, __LINE__, result);
    return result;
 }
 
@@ -1151,6 +1162,7 @@ VkResult anv_CreateInstance(
    }
 
    instance->vk.physical_devices.try_create_for_drm = anv_physical_device_try_create;
+   instance->vk.physical_devices.try_create_for_dxg = anv_physical_device_try_create_dxg;
    instance->vk.physical_devices.destroy = anv_physical_device_destroy;
 
    VG(VALGRIND_CREATE_MEMPOOL(instance, 0, false));

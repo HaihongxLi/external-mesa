@@ -29,7 +29,8 @@
 
 #include "c11/threads.h"
 #include "util/list.h"
-
+#include <wsl/winadapter.h>
+#include <d3dkmthk.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -139,6 +140,10 @@ struct vk_instance {
        */
       VkResult (*try_create_for_drm)(struct vk_instance *instance,
                                      struct _drmDevice *device,
+                                     struct vk_physical_device **out);
+
+      VkResult (*try_create_for_dxg)(struct vk_instance *instance,
+                                     D3DKMT_ADAPTERINFO *device,
                                      struct vk_physical_device **out);
 
       /** Handle the destruction of a physical device

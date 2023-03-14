@@ -36,7 +36,8 @@
 #include "vk_physical_device.h"
 
 #include "compiler/glsl_types.h"
-
+#include <wsl/winadapter.h>
+#include <d3dkmthk.h>
 #define VERSION_IS_1_0(version) \
    (VK_API_VERSION_MAJOR(version) == 1 && VK_API_VERSION_MINOR(version) == 0)
 
@@ -256,7 +257,8 @@ vk_enumerate_instance_extension_properties(
          *prop = vk_instance_extensions[i];
       }
    }
-
+   // printf("LHH, %s:%s:%d, VK_INSTANCE_EXTENSION_COUNT(%d), pPropertyCount(%d), pProperties(%p)\n",
+   //    __FILE__, __FUNCTION__, __LINE__, VK_INSTANCE_EXTENSION_COUNT, *pPropertyCount, pProperties);
    return vk_outarray_status(&out);
 }
 
@@ -273,7 +275,7 @@ vk_instance_get_proc_addr(const struct vk_instance *instance,
     */
    if (name == NULL)
       return NULL;
-
+   // printf("LHH, %s:%s:%d, %s\n",__FILE__, __FUNCTION__, __LINE__, name);
 #define LOOKUP_VK_ENTRYPOINT(entrypoint) \
    if (strcmp(name, "vk" #entrypoint) == 0) \
       return (PFN_vkVoidFunction)entrypoints->entrypoint
@@ -359,18 +361,33 @@ vk_instance_get_physical_device_proc_addr(const struct vk_instance *instance,
 static VkResult
 enumerate_drm_physical_devices_locked(struct vk_instance *instance)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
 #ifdef HAVE_LIBDRM
    /* TODO: Check for more devices ? */
-   drmDevicePtr devices[8];
+   // drmDevicePtr devices[8];
+   D3DKMT_ENUMADAPTERS3 Args = {};
+   const UINT MAX_ADAPTERS = 16;
+   D3DKMT_ADAPTERINFO Adapters[MAX_ADAPTERS] = {};
+   Args.NumAdapters = MAX_ADAPTERS;
+   Args.pAdapters = Adapters;
+   Args.Filter.IncludeComputeOnly = 1;
+   NTSTATUS Status = D3DKMTEnumAdapters3(&Args);
+   if (!NT_SUCCESS(Status))
+   {
+      printf("LHH, D3DKMTEnumAdapters3 failed: %x", Status);
+      return VK_ERROR_UNKNOWN;
+   }
+   printf("LHH, D3DKMTEnumAdapters3 returned %d adapters:\n", Args.NumAdapters);
+
    // int max_devices = drmGetDevices2(0, devices, ARRAY_SIZE(devices));
-   int max_devices = 0;
+   int max_devices = Args.NumAdapters;
    if (max_devices < 1)
       return VK_SUCCESS;
 
    VkResult result;
    for (uint32_t i = 0; i < (uint32_t)max_devices; i++) {
       struct vk_physical_device *pdevice;
-      result = instance->physical_devices.try_create_for_drm(instance, devices[i], &pdevice);
+      result = instance->physical_devices.try_create_for_dxg(instance, &Adapters[i], &pdevice);
 
       /* Incompatible DRM device, skip. */
       if (result == VK_ERROR_INCOMPATIBLE_DRIVER) {
@@ -394,12 +411,14 @@ enumerate_drm_physical_devices_locked(struct vk_instance *instance)
 static VkResult
 enumerate_physical_devices_locked(struct vk_instance *instance)
 {
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
    if (instance->physical_devices.enumerate)
       return instance->physical_devices.enumerate(instance);
 
    VkResult result = VK_SUCCESS;
 
    if (instance->physical_devices.try_create_for_drm) {
+      printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
       result = enumerate_drm_physical_devices_locked(instance);
       if (result != VK_SUCCESS) {
          destroy_physical_devices(instance);
@@ -414,7 +433,7 @@ static VkResult
 enumerate_physical_devices(struct vk_instance *instance)
 {
    VkResult result = VK_SUCCESS;
-
+   printf("LHH, %s:%s:%d\n",__FILE__, __FUNCTION__, __LINE__);
    mtx_lock(&instance->physical_devices.mutex);
    if (!instance->physical_devices.enumerated) {
       result = enumerate_physical_devices_locked(instance);

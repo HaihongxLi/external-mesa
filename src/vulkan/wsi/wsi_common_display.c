@@ -1091,6 +1091,7 @@ static void
 wsi_display_destroy_buffer(struct wsi_display *wsi,
                            uint32_t buffer)
 {
+   printf("LHH, %s:%s:%d:call drmIoctl(DRM_IOCTL_GEM_CLOSE)\n",__FILE__, __FUNCTION__, __LINE__);
    // (void) drmIoctl(wsi->fd, DRM_IOCTL_GEM_CLOSE,
    //                 &((struct drm_gem_close) { .handle = buffer }));
 }

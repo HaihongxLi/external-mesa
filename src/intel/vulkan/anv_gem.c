@@ -44,7 +44,7 @@ anv_gem_create(struct anv_device *device, uint64_t size)
    struct drm_i915_gem_create gem_create = {
       .size = size,
    };
-
+   printf("LHH, %s:%s:%d:call intel_ioctl(DRM_IOCTL_I915_GEM_CREATE)\n",__FILE__, __FUNCTION__, __LINE__);
    // int ret = intel_ioctl(device->fd, DRM_IOCTL_I915_GEM_CREATE, &gem_create);
    int ret = 0;
    if (ret != 0) {
@@ -61,7 +61,7 @@ anv_gem_close(struct anv_device *device, uint32_t gem_handle)
    struct drm_gem_close close = {
       .handle = gem_handle,
    };
-
+   printf("LHH, %s:%s:%d:call intel_ioctl(DRM_IOCTL_GEM_CLOSE)\n",__FILE__, __FUNCTION__, __LINE__);
    // intel_ioctl(device->fd, DRM_IOCTL_GEM_CLOSE, &close);
 }
 
@@ -84,7 +84,7 @@ anv_gem_create_regions(struct anv_device *device, uint64_t anv_bo_size,
       .extensions = (uintptr_t) &ext_regions,
       .flags = flags,
    };
-
+   printf("LHH, %s:%s:%d:call intel_ioctl(DRM_IOCTL_I915_GEM_CREATE_EXT)\n",__FILE__, __FUNCTION__, __LINE__);
    // int ret = intel_ioctl(device->fd, DRM_IOCTL_I915_GEM_CREATE_EXT,
    //                       &gem_create);
    int ret = 0;
@@ -108,7 +108,7 @@ anv_gem_mmap_offset(struct anv_device *device, uint32_t gem_handle,
          (flags & I915_MMAP_WC) ? I915_MMAP_OFFSET_WC : I915_MMAP_OFFSET_WB,
    };
    assert(offset == 0);
-
+   printf("LHH, %s:%s:%d:call intel_ioctl(DRM_IOCTL_I915_GEM_MMAP_OFFSET)\n",__FILE__, __FUNCTION__, __LINE__);
    /* Get the fake offset back */
    // int ret = intel_ioctl(device->fd, DRM_IOCTL_I915_GEM_MMAP_OFFSET, &gem_mmap);
    int ret = 0;
@@ -133,7 +133,7 @@ anv_gem_mmap_legacy(struct anv_device *device, uint32_t gem_handle,
       .size = size,
       .flags = flags,
    };
-
+   printf("LHH, %s:%s:%d:call intel_ioctl(DRM_IOCTL_I915_GEM_MMAP)\n",__FILE__, __FUNCTION__, __LINE__);
    // int ret = intel_ioctl(device->fd, DRM_IOCTL_I915_GEM_MMAP, &gem_mmap);
    int ret = 0;
    if (ret != 0)
@@ -183,7 +183,7 @@ anv_gem_userptr(struct anv_device *device, void *mem, size_t size)
 
    if (device->physical->info.has_userptr_probe)
       userptr.flags |= I915_USERPTR_PROBE;
-
+   printf("LHH, %s:%s:%d:call intel_ioctl(DRM_IOCTL_I915_GEM_USERPTR)\n",__FILE__, __FUNCTION__, __LINE__);
    // int ret = intel_ioctl(device->fd, DRM_IOCTL_I915_GEM_USERPTR, &userptr);
    int ret = 0;
    if (ret == -1)
@@ -200,7 +200,7 @@ anv_gem_set_caching(struct anv_device *device,
       .handle = gem_handle,
       .caching = caching,
    };
-
+   printf("LHH, %s:%s:%d:call intel_ioctl(DRM_IOCTL_I915_GEM_SET_CACHING)\n",__FILE__, __FUNCTION__, __LINE__);
    // return intel_ioctl(device->fd, DRM_IOCTL_I915_GEM_SET_CACHING, &gem_caching);
    return 0;
 }
@@ -216,7 +216,7 @@ anv_gem_wait(struct anv_device *device, uint32_t gem_handle, int64_t *timeout_ns
       .timeout_ns = *timeout_ns,
       .flags = 0,
    };
-
+   printf("LHH, %s:%s:%d:call intel_ioctl(DRM_IOCTL_I915_GEM_WAIT)\n",__FILE__, __FUNCTION__, __LINE__);
    // int ret = intel_ioctl(device->fd, DRM_IOCTL_I915_GEM_WAIT, &wait);
    int ret = 0;
    *timeout_ns = wait.timeout_ns;
@@ -228,12 +228,16 @@ int
 anv_gem_execbuffer(struct anv_device *device,
                    struct drm_i915_gem_execbuffer2 *execbuf)
 {
-   if (execbuf->flags & I915_EXEC_FENCE_OUT)
+   if (execbuf->flags & I915_EXEC_FENCE_OUT) {
+      printf("LHH, %s:%s:%d:call intel_ioctl(DRM_IOCTL_I915_GEM_EXECBUFFER2_WR)\n",__FILE__, __FUNCTION__, __LINE__);
       // return intel_ioctl(device->fd, DRM_IOCTL_I915_GEM_EXECBUFFER2_WR, execbuf);
       return 0;
-   else
+   }
+   else {
+      printf("LHH, %s:%s:%d:call intel_ioctl(DRM_IOCTL_I915_GEM_EXECBUFFER2)\n",__FILE__, __FUNCTION__, __LINE__);
       // return intel_ioctl(device->fd, DRM_IOCTL_I915_GEM_EXECBUFFER2, execbuf);
       return 0;
+   }
 }
 
 /** Return -1 on error. */
@@ -256,7 +260,7 @@ anv_gem_get_tiling(struct anv_device *device, uint32_t gem_handle)
    //    assert(!"Failed to get BO tiling");
    //    return -1;
    // }
-
+   printf("LHH, %s:%s:%d:call intel_ioctl(DRM_IOCTL_I915_GEM_GET_TILING)\n",__FILE__, __FUNCTION__, __LINE__);
    return get_tiling.tiling_mode;
 }
 
@@ -284,7 +288,7 @@ anv_gem_set_tiling(struct anv_device *device,
 
    //    ret = ioctl(device->fd, DRM_IOCTL_I915_GEM_SET_TILING, &set_tiling);
    // } while (ret == -1 && (errno == EINTR || errno == EAGAIN));
-
+   printf("LHH, %s:%s:%d:call intel_ioctl(DRM_IOCTL_I915_GEM_SET_TILING)\n",__FILE__, __FUNCTION__, __LINE__);
    return ret;
 }
 
@@ -331,7 +335,7 @@ anv_gem_context_get_reset_stats(int fd, int context,
    struct drm_i915_reset_stats stats = {
       .ctx_id = context,
    };
-
+   printf("LHH, %s:%s:%d:call intel_ioctl(DRM_IOCTL_I915_GET_RESET_STATS)\n",__FILE__, __FUNCTION__, __LINE__);
    // int ret = intel_ioctl(fd, DRM_IOCTL_I915_GET_RESET_STATS, &stats);
    int ret = 0;
    if (ret == 0) {
@@ -349,7 +353,7 @@ anv_gem_handle_to_fd(struct anv_device *device, uint32_t gem_handle)
       .handle = gem_handle,
       .flags = DRM_CLOEXEC | DRM_RDWR,
    };
-
+   printf("LHH, %s:%s:%d:call intel_ioctl(DRM_IOCTL_PRIME_HANDLE_TO_FD)\n",__FILE__, __FUNCTION__, __LINE__);
    // int ret = intel_ioctl(device->fd, DRM_IOCTL_PRIME_HANDLE_TO_FD, &args);
    int ret = 0;
    if (ret == -1)
@@ -364,7 +368,7 @@ anv_gem_fd_to_handle(struct anv_device *device, int fd)
    struct drm_prime_handle args = {
       .fd = fd,
    };
-
+   printf("LHH, %s:%s:%d:call intel_ioctl(DRM_IOCTL_PRIME_FD_TO_HANDLE)\n",__FILE__, __FUNCTION__, __LINE__);
    // int ret = intel_ioctl(device->fd, DRM_IOCTL_PRIME_FD_TO_HANDLE, &args);
    int ret = 0;
    if (ret == -1)

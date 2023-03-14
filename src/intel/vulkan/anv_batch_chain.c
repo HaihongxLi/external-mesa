@@ -1878,6 +1878,7 @@ anv_queue_exec_locked(struct anv_queue *queue,
       if (!INTEL_DEBUG(DEBUG_NO_OACONFIG) &&
           (query_info->kind == INTEL_PERF_QUERY_TYPE_OA ||
            query_info->kind == INTEL_PERF_QUERY_TYPE_RAW)) {
+         printf("LHH, %s:%s:%d:call intel_ioctl(I915_PERF_IOCTL_CONFIG)\n",__FILE__, __FUNCTION__, __LINE__);
          // int ret = intel_ioctl(device->perf_fd, I915_PERF_IOCTL_CONFIG,
          //                       (void *)(uintptr_t) query_info->oa_metrics_set_id);
          int ret = 0;

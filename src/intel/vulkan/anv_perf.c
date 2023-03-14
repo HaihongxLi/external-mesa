@@ -142,7 +142,7 @@ anv_device_perf_open(struct anv_device *device, uint64_t metric_id)
    param.flags |= I915_PERF_FLAG_FD_CLOEXEC | I915_PERF_FLAG_FD_NONBLOCK;
    param.properties_ptr = (uintptr_t)properties;
    param.num_properties = p / 2;
-
+   printf("LHH, %s:%s:%d:call intel_ioctl(DRM_IOCTL_I915_PERF_OPEN)\n",__FILE__, __FUNCTION__, __LINE__);
    // stream_fd = intel_ioctl(device->fd, DRM_IOCTL_I915_PERF_OPEN, &param);
    stream_fd = 0;
    return stream_fd;
@@ -248,7 +248,7 @@ VkResult anv_ReleasePerformanceConfigurationINTEL(
 {
    ANV_FROM_HANDLE(anv_device, device, _device);
    ANV_FROM_HANDLE(anv_performance_configuration_intel, config, _configuration);
-
+   printf("LHH, %s:%s:%d:call intel_ioctl(DRM_IOCTL_I915_PERF_REMOVE_CONFIG)\n",__FILE__, __FUNCTION__, __LINE__);
    // if (!INTEL_DEBUG(DEBUG_NO_OACONFIG))
    //    intel_ioctl(device->fd, DRM_IOCTL_I915_PERF_REMOVE_CONFIG, &config->config_id);
 
@@ -273,6 +273,7 @@ VkResult anv_QueueSetPerformanceConfigurationINTEL(
          if (device->perf_fd < 0)
             return VK_ERROR_INITIALIZATION_FAILED;
       } else {
+         printf("LHH, %s:%s:%d:call intel_ioctl(I915_PERF_IOCTL_CONFIG)\n",__FILE__, __FUNCTION__, __LINE__);
          // int ret = intel_ioctl(device->perf_fd, I915_PERF_IOCTL_CONFIG,
          //                       (void *)(uintptr_t) config->config_id);
          int ret = 0;

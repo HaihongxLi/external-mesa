@@ -53,6 +53,7 @@ vk_drm_syncobj_init(struct vk_device *device,
       flags |= DRM_SYNCOBJ_CREATE_SIGNALED;
 
    assert(device->drm_fd >= 0);
+   printf("LHH, %s:%s:%d:call drmSyncobjCreate\n",__FILE__, __FUNCTION__, __LINE__);
    // int err = drmSyncobjCreate(device->drm_fd, flags, &sobj->syncobj);
    int err = 0;
    if (err < 0) {
@@ -61,6 +62,7 @@ vk_drm_syncobj_init(struct vk_device *device,
    }
 
    if ((sync->flags & VK_SYNC_IS_TIMELINE) && initial_value) {
+      printf("LHH, %s:%s:%d:call drmSyncobjTimelineSignal\n",__FILE__, __FUNCTION__, __LINE__);
       // err = drmSyncobjTimelineSignal(device->drm_fd, &sobj->syncobj,
       //                                &initial_value, 1);
       if (err < 0) {
@@ -80,6 +82,7 @@ vk_drm_syncobj_finish(struct vk_device *device,
    struct vk_drm_syncobj *sobj = to_drm_syncobj(sync);
 
    assert(device->drm_fd >= 0);
+   printf("LHH, %s:%s:%d:call drmSyncobjDestroy\n",__FILE__, __FUNCTION__, __LINE__);
    // ASSERTED int err = drmSyncobjDestroy(device->drm_fd, sobj->syncobj);
    int err = 0;
    assert(err == 0);
@@ -94,6 +97,7 @@ vk_drm_syncobj_signal(struct vk_device *device,
 
    assert(device->drm_fd >= 0);
    int err;
+   printf("LHH, %s:%s:%d:call drmSyncobjTimelineSignal or drmSyncobjSignal\n",__FILE__, __FUNCTION__, __LINE__);
    // if (sync->flags & VK_SYNC_IS_TIMELINE)
    //    err = drmSyncobjTimelineSignal(device->drm_fd, &sobj->syncobj, &value, 1);
    // else
@@ -114,6 +118,7 @@ vk_drm_syncobj_get_value(struct vk_device *device,
    struct vk_drm_syncobj *sobj = to_drm_syncobj(sync);
 
    assert(device->drm_fd >= 0);
+   printf("LHH, %s:%s:%d:call drmSyncobjQuery\n",__FILE__, __FUNCTION__, __LINE__);
    // int err = drmSyncobjQuery(device->drm_fd, &sobj->syncobj, value, 1);
    int err = 0;
    if (err) {
@@ -131,6 +136,7 @@ vk_drm_syncobj_reset(struct vk_device *device,
    struct vk_drm_syncobj *sobj = to_drm_syncobj(sync);
 
    assert(device->drm_fd >= 0);
+   printf("LHH, %s:%s:%d:call drmSyncobjReset\n",__FILE__, __FUNCTION__, __LINE__);
    // int err = drmSyncobjReset(device->drm_fd, &sobj->syncobj, 1);
    int err = 0;
    if (err) {
@@ -147,13 +153,14 @@ sync_has_sync_file(struct vk_device *device, struct vk_sync *sync)
    uint32_t handle = to_drm_syncobj(sync)->syncobj;
 
    int fd = -1;
+   printf("LHH, %s:%s:%d:call drmSyncobjExportSyncFile\n",__FILE__, __FUNCTION__, __LINE__);
    // int err = drmSyncobjExportSyncFile(device->drm_fd, handle, &fd);
    int err = 0;
    if (!err) {
       close(fd);
       return VK_SUCCESS;
    }
-
+   printf("LHH, %s:%s:%d:call drmSyncobjWait\n",__FILE__, __FUNCTION__, __LINE__);
    /* On the off chance the sync_file export repeatedly fails for some
     * unexpected reason, we want to ensure this function will return success
     * eventually.  Do a zero-time syncobj wait if the export failed.
@@ -255,7 +262,7 @@ vk_drm_syncobj_wait_many(struct vk_device *device,
    uint32_t syncobj_wait_flags = DRM_SYNCOBJ_WAIT_FLAGS_WAIT_FOR_SUBMIT;
    if (!(wait_flags & VK_SYNC_WAIT_ANY))
       syncobj_wait_flags |= DRM_SYNCOBJ_WAIT_FLAGS_WAIT_ALL;
-
+   printf("LHH, %s:%s:%d:call drmSyncobjTimelineWait or drmSyncobjWait\n",__FILE__, __FUNCTION__, __LINE__);
    assert(device->drm_fd >= 0);
    int err;
    if (wait_count == 0) {
@@ -304,13 +311,14 @@ vk_drm_syncobj_import_opaque_fd(struct vk_device *device,
 
    assert(device->drm_fd >= 0);
    uint32_t new_handle;
+   printf("LHH, %s:%s:%d:call drmSyncobjFDToHandle\n",__FILE__, __FUNCTION__, __LINE__);
    // int err = drmSyncobjFDToHandle(device->drm_fd, fd, &new_handle);
    int err = 0;
    if (err) {
       return vk_errorf(device, VK_ERROR_UNKNOWN,
                        "DRM_IOCTL_SYNCOBJ_FD_TO_HANDLE failed: %m");
    }
-
+   printf("LHH, %s:%s:%d:call drmSyncobjDestroy\n",__FILE__, __FUNCTION__, __LINE__);
    // err = drmSyncobjDestroy(device->drm_fd, sobj->syncobj);
    assert(!err);
 
@@ -327,6 +335,7 @@ vk_drm_syncobj_export_opaque_fd(struct vk_device *device,
    struct vk_drm_syncobj *sobj = to_drm_syncobj(sync);
 
    assert(device->drm_fd >= 0);
+   printf("LHH, %s:%s:%d:call drmSyncobjHandleToFD\n",__FILE__, __FUNCTION__, __LINE__);
    // int err = drmSyncobjHandleToFD(device->drm_fd, sobj->syncobj, fd);
    int err = 0;
    if (err) {
@@ -345,6 +354,7 @@ vk_drm_syncobj_import_sync_file(struct vk_device *device,
    struct vk_drm_syncobj *sobj = to_drm_syncobj(sync);
 
    assert(device->drm_fd >= 0);
+   printf("LHH, %s:%s:%d:call drmSyncobjImportSyncFile\n",__FILE__, __FUNCTION__, __LINE__);
    // int err = drmSyncobjImportSyncFile(device->drm_fd, sobj->syncobj, sync_file);
    int err = 0;
    if (err) {
@@ -363,6 +373,7 @@ vk_drm_syncobj_export_sync_file(struct vk_device *device,
    struct vk_drm_syncobj *sobj = to_drm_syncobj(sync);
 
    assert(device->drm_fd >= 0);
+   printf("LHH, %s:%s:%d:call drmSyncobjExportSyncFile\n",__FILE__, __FUNCTION__, __LINE__);
    // int err = drmSyncobjExportSyncFile(device->drm_fd, sobj->syncobj, sync_file);
    int err = 0;
    if (err) {
@@ -413,6 +424,7 @@ struct vk_sync_type
 vk_drm_syncobj_get_type(int drm_fd)
 {
    uint32_t syncobj = 0;
+   printf("LHH, %s:%s:%d:call drmSyncobjCreate\n",__FILE__, __FUNCTION__, __LINE__);
    // int err = drmSyncobjCreate(drm_fd, DRM_SYNCOBJ_CREATE_SIGNALED, &syncobj);
    int err = 0;
    if (err < 0)
@@ -435,7 +447,7 @@ vk_drm_syncobj_get_type(int drm_fd)
       .import_sync_file = vk_drm_syncobj_import_sync_file,
       .export_sync_file = vk_drm_syncobj_export_sync_file,
    };
-
+   printf("LHH, %s:%s:%d:call drmSyncobjWait\n",__FILE__, __FUNCTION__, __LINE__);
    // err = drmSyncobjWait(drm_fd, &syncobj, 1, 0,
    //                      DRM_SYNCOBJ_WAIT_FLAGS_WAIT_ALL,
    //                      NULL /* first_signaled */);
@@ -446,12 +458,13 @@ vk_drm_syncobj_get_type(int drm_fd)
    }
 
    uint64_t cap;
+   printf("LHH, %s:%s:%d:call drmGetCap\n",__FILE__, __FUNCTION__, __LINE__);
    // err = drmGetCap(drm_fd, DRM_CAP_SYNCOBJ_TIMELINE, &cap);
    if (err == 0 && cap != 0) {
       type.get_value = vk_drm_syncobj_get_value;
       type.features |= VK_SYNC_FEATURE_TIMELINE;
    }
-
+   printf("LHH, %s:%s:%d:call drmSyncobjDestroy\n",__FILE__, __FUNCTION__, __LINE__);
    // err = drmSyncobjDestroy(drm_fd, syncobj);
    assert(err == 0);
 

@@ -378,7 +378,7 @@ enumerate_drm_physical_devices_locked(struct vk_instance *instance)
       return VK_ERROR_UNKNOWN;
    }
    printf("LHH, D3DKMTEnumAdapters3 returned %d adapters:\n", Args.NumAdapters);
-
+   printf("LHH, %s:%s:%d:call drmGetDevices2\n",__FILE__, __FUNCTION__, __LINE__);
    // int max_devices = drmGetDevices2(0, devices, ARRAY_SIZE(devices));
    int max_devices = Args.NumAdapters;
    if (max_devices < 1)
@@ -401,7 +401,7 @@ enumerate_drm_physical_devices_locked(struct vk_instance *instance)
 
       list_addtail(&pdevice->link, &instance->physical_devices.list);
    }
-
+   printf("LHH, %s:%s:%d:call drmFreeDevices\n",__FILE__, __FUNCTION__, __LINE__);
    // drmFreeDevices(devices, max_devices);
    return result;
 #endif

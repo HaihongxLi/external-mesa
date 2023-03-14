@@ -2078,6 +2078,7 @@ intel_get_device_info_from_fd(int fd, struct intel_device_info *devinfo)
     * this drm query.
     */
    drmDevicePtr drmdev = NULL;
+   printf("LHH, %s:%s:%d:call drmGetDevice2\n",__FILE__, __FUNCTION__, __LINE__);
    return false;
    // if (drmGetDevice2(fd, DRM_DEVICE_GET_PCI_REVISION, &drmdev)) {
    //    mesa_loge("Failed to query drm device.");
